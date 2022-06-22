@@ -12,6 +12,9 @@
     "Drugs",
     "Pharmacy"
   ],
+  "engines": {
+    "node": "12.18.4"
+  },
   "author": "Codelth",
   "license": "ISC",
   "dependencies": {
