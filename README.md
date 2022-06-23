@@ -1,4 +1,4 @@
-     **Pharmacy Managegement system**
+     Pharmacy Managegement system
  A platform that will enable pharmacist to
 manage their pharmacy(ies). The platform 
 will enable to record each drugs, track 
