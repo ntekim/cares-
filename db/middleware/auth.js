@@ -12,7 +12,7 @@ const jwtAuth = (req, res, next) => {
     }
   } catch {
     res.status(401).json({
-      error: new Error('Invalid request!')
+      error: "Unauthorized to perform this action"
     });
   }
 };

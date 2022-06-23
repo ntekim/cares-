@@ -44,27 +44,28 @@ const updateProfile = async (req, res) => {
 
 const loggedInUser = async (req, res) => {
     try {
-        const token = req.headers.authorization.split(' ')[1];
-        if (token)
-        {
-            let decodedToken = jwt.verify(token, process.env.JWT_KEY)
-            const userId = decodedToken._id;
-            if(req.body.userId && req.body.userId !== userId)
+        // if(req.headers.authorization){
+            const token = req.headers.authorization.split(' ')[1];
+            if (token)
             {
-                res.status(404).send("User with that ID not found")
-            }
-                await Pharmacist.findById(userId)
-                .then((pharm) => {
-                    res.status(200).json({
-                        User: pharm
+                let decodedToken = jwt.verify(token, process.env.JWT_KEY)
+                const userId = decodedToken._id;
+                if(req.body.userId && req.body.userId !== userId)
+                {
+                    res.status(404).send("User with that ID not found")
+                }
+                    await Pharmacist.findById(userId)
+                    .then((pharm) => {
+                        res.status(200).json({
+                            User: pharm
+                        });
+                    }).catch((err) => {
+                        res.status(400).send(err);
                     });
-                }).catch((err) => {
-                    res.status(400).send(err);
-                });
-        }
-        res.json({
-            errorMessage: 'No token found'
-        });
+            }
+            res.status(400).send('No Token Found!');
+        // }
+        // res.status(400).send('Authorization header not set!');
     } catch (err) {
         if (err) throw new Error(err);
     }
