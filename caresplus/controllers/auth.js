@@ -124,7 +124,7 @@ exports.login = async (req, res) => {
                 error: 'Incorrect password!'
               });
             }
-            //   Generate JWT token to indicate user credential is valid
+              // Generate JWT token to indicate user credential is valid
             const token = jwt.sign(
               { _id: pharmacist._id },
               process.env.JWT_KEY,

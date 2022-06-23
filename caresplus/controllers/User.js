@@ -1,11 +1,11 @@
-const { currentUser } = require("../../db/middleware/auth");
+// const { currentUser } = require("../../db/middleware/auth");
 const Pharmacist = require("../models/pharmacist");
+const jwt = require("jsonwebtoken");
 
 const updateProfile = async (req, res) => {
     try{
         const { firstName, lastName, password, phone, image,  country, city, license, dob, identificationNumber, street, registrationDocument } = req.body;
 
-        console.log();
         await Pharmacist.findById({_id: req.params.id})
         .then(
             (pharmacist) => {
@@ -42,4 +42,34 @@ const updateProfile = async (req, res) => {
     }
 }
 
-module.exports = { updateProfile };
+const loggedInUser = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        if (token)
+        {
+            let decodedToken = jwt.verify(token, process.env.JWT_KEY)
+            const userId = decodedToken._id;
+            if(req.body.userId && req.body.userId !== userId)
+            {
+                res.status(404).send("User with that ID not found")
+            }
+                await Pharmacist.findById(userId)
+                .then((pharm) => {
+                    res.status(200).json({
+                        User: pharm
+                    });
+                }).catch((err) => {
+                    res.status(400).send(err);
+                });
+        }
+        res.json({
+            errorMessage: 'No token found'
+        });
+    } catch (err) {
+        if (err) throw new Error(err);
+    }
+    
+    
+}
+
+module.exports = { updateProfile, loggedInUser };
