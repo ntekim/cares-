@@ -4,47 +4,43 @@ const jwt = require("jsonwebtoken");
 
 const updateProfile = async (req, res) => {
     try{
-        const { firstName, lastName, password, phone, image,  country, city, license, dob, identificationNumber, street, registrationDocument } = req.body;
+        const { firstName, lastName, phone, image,  country, state, city, license, dob, identificationNumber, street, registrationDocument } = req.body;
 
-        await Pharmacist.findById({_id: req.params.id})
+        let id = req.params.id;
+        await Pharmacist.findById(id)
         .then(
             (pharmacist) => {
                 pharmacist.firstName = firstName;
                 pharmacist.lastName = lastName;
-                pharmacist.password = password;
                 pharmacist.phone = phone;
                 pharmacist.photo = image;
                 pharmacist.license = license; 
-                pharmacist.dob = dob; 
-                pharmacist.identificationNumber = identificationNumber; 
-                pharmacist.address = {
-                    country: country,
-                    state: state,
-                    city: city,
-                    street: street
-                };
+                pharmacist.dob = dob;
+                pharmacist.identificationNumber = identificationNumber;
+                pharmacist.address.country = country;
+                pharmacist.address.state = state;
+                pharmacist.address.city = city;
+                pharmacist.address.street = street;
                 pharmacist.save();
                 res.status(201).json({
                     message: "Profile Updated successfully",
-                    data: pharmacist
+                    Profile: pharmacist
                 });
             }
-        ).catch((error) => {
+        ).catch(() => {
             res.status(401).json({
                 message: "Pharmacist with this ID does not exist!",
-                error: error
             });
         })
     } catch(error) {
         res.status(400).json({
-            error: error
+            error: "Invalid request"
         })
     }
 }
 
-const loggedInUser = async (req, res) => {
+const loggedInPharmacist = async (req, res) => {
     try {
-        // if(req.headers.authorization){
             const token = req.headers.authorization.split(' ')[1];
             if (token)
             {
@@ -64,8 +60,6 @@ const loggedInUser = async (req, res) => {
                     });
             }
             res.status(400).send('No Token Found!');
-        // }
-        // res.status(400).send('Authorization header not set!');
     } catch (err) {
         if (err) throw new Error(err);
     }
@@ -73,4 +67,41 @@ const loggedInUser = async (req, res) => {
     
 }
 
-module.exports = { updateProfile, loggedInUser };
+const getAllPharmacist = async (req, res) => {
+    try {
+        await Pharmacist.find((err, data) => {
+            if(err)
+                res.status(500).send(err);
+
+            res.status(200).json({data});
+        })
+    } catch (error) {
+        
+    }
+}
+
+const deactivatePharmacist = async (req, res) => {
+   try {
+        const { id } = req.params.id || req.body.id;
+
+        if (!id)
+            res.status(400).send("Id is required");
+
+        await Pharmacist.findById(id)
+        .then((pharm) => {
+            if(!pharm)
+                res.status(404).send("Pharmacist with the ID does not exist");
+
+            pharm.status = 0;
+            pharm.save();
+            res.status(200).json({
+                message: "Pharmacist deactivated",
+                data: pharm
+            });
+        })
+   } catch (error) {
+    
+   }
+}
+
+module.exports = { updateProfile, loggedInPharmacist, deactivatePharmacist, getAllPharmacist };

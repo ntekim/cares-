@@ -13,7 +13,7 @@ app.use(express.json());
 
 
 app.use('/api/pharmacist/auth', authRoutes);
-app.use('/api/pharmacist/user', userRoutes);
+app.use('/api/pharmacist/users', userRoutes);
 
 //setting vapid keys details
 // webpush.setVapidDetails('mailto:jothamntekim@gmail.com', process.env.PUBLIC_VAPID_KEY, process.env.PRIVATE_VAPID_KEY);
