@@ -11,7 +11,7 @@ const categories = [
     },
     {
         name: 'Contraception',
-        description: 'Dunno'
+        description: 'Pharmacy manager'
     }
 ];
 

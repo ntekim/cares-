@@ -21,5 +21,4 @@ const jwtAuth = (req, res, next) => {
   }
 };
 
-
 module.exports = { jwtAuth };
