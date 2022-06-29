@@ -82,7 +82,8 @@ const getAllPharmacist = async (req, res) => {
 
 const deactivatePharmacist = async (req, res) => {
    try {
-        const { id } = req.params.id || req.body.id;
+        const id  = req.params.id;
+        console.log(req.params.id);
 
         if (!id)
             res.status(400).send("Id is required");

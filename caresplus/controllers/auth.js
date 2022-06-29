@@ -18,7 +18,6 @@ exports.signup = async (req, res, next) => {
       //   Check if user with email already exists, if yes, throws an error
       const mail = {email: email};
       const userCheck = await Pharmacist.findOne(mail);
-      console.log(userCheck);
       if (userCheck) {
           res.status(409).send("Pharmacist with this email already exists");
           process.exit(1);
@@ -35,7 +34,6 @@ exports.signup = async (req, res, next) => {
       // console.log(errors);
       let query = { title: "pharmacist" };
       let role = await Role.findOne(query);
-      console.log(role._id);
       bcrypt.hash(password, 15)
       .then(async (hash) => {
           await Pharmacist.create({
@@ -63,12 +61,10 @@ exports.signup = async (req, res, next) => {
               pharm.outlets.push(outlet._id);
               pharm.role = role._id;
               pharm.save();
-              console.log(pharm._id, outlet._id, role._id, outlet);
               res.status(201).json({
                 message: "Pharmacist registered succesfully",
                 data: pharm
               });
-              console.log("Pharmacists registered succesfully");
               next();
             }).catch((error) => {
               res.status(400).json({
@@ -114,6 +110,8 @@ exports.login = async (req, res) => {
           return res.status(400).json({
             error: 'pharmacist not found!'
           });
+        }else if(pharmacist.status == false){
+           return res.status(400).send("Your account was deactivated, please contact admin");
         }
         //decrypt user password stored in database, compare to inputed password to see if it matches
         await bcrypt.compare(req.body.password, pharmacist.password)

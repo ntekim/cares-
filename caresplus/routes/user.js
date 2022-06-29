@@ -6,7 +6,7 @@ const { jwtAuth } = require("../../db/middleware/auth");
 router.post('/:id/profile/update', jwtAuth, UserController.updateProfile);
 router.get('/current/profile', jwtAuth, UserController.loggedInPharmacist);
 router.get('/all', jwtAuth, UserController.getAllPharmacist);
-router.get('/:id/deactivate', jwtAuth, UserController.deactivatePharmacist);
+router.post('/:id/deactivate', jwtAuth, UserController.deactivatePharmacist);
 
 
 
