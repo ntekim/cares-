@@ -8,7 +8,11 @@ const jwtAuth = (req, res, next) => {
     if (req.body.userId && req.body.userId !== userId) {
       throw 'Invalid user ID';
     } else {
-      next();
+      if (decodedToken.status == 0){
+        throw 'Account was deactivated, contact admin';
+      }else {
+        next();
+      }
     }
   } catch {
     res.status(401).json({
