@@ -9,28 +9,31 @@ const OutletModel = Schema({
         type: String,
         default: 'Main Outlet'
     },
-    country: {
-        type: String,
-        default: 'Nigeria'
-    },
-    state: {
-        type: String,
-        default: null
-    },
-    city: {
-        type: String,
-        default: null
-    },
+    
     address: {
-        type: String,
-        default: null
+        country: {
+            type: String,
+            default: 'Nigeria'
+        },
+        state: {
+            type: String,
+            default: null
+        },
+        city: {
+            type: String,
+            default: null
+        },
+        street: {
+            type: String,
+            default: null
+        }
     },
     business: {
         registrationDocument: {
             type: String,
             default: null
         },
-        photo: {
+        logo: {
             type: String,
             default: null
         },

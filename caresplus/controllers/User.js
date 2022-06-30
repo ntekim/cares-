@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const updateProfile = async (req, res) => {
     try{
-        const { firstName, lastName, phone, image,  country, state, city, license, dob, identificationNumber, street, registrationDocument } = req.body;
+        const { firstName, lastName, phone, image,  country, state, city, license, dob, identificationNumber, street } = req.body;
 
         let id = req.params.id;
         await Pharmacist.findById(id)
@@ -76,32 +76,35 @@ const getAllPharmacist = async (req, res) => {
             res.status(200).json({data});
         })
     } catch (error) {
-        
+        res.status(400).json({
+            error: "Invalid request"
+        });
     }
 }
 
 const deactivatePharmacist = async (req, res) => {
    try {
         const id  = req.params.id;
-        console.log(req.params.id);
-
         if (!id)
             res.status(400).send("Id is required");
 
         await Pharmacist.findById(id)
         .then((pharm) => {
-            if(!pharm)
-                res.status(404).send("Pharmacist with the ID does not exist");
-
-            pharm.status = 0;
-            pharm.save();
-            res.status(200).json({
-                message: "Pharmacist deactivated",
-                data: pharm
+                pharm.status = 0;
+                pharm.save();
+                res.status(200).json({
+                    message: "Pharmacist deactivated",
+                    data: pharm
+                });
+        }).catch(() => {
+            res.status(401).json({
+                message: "Pharmacist with this ID does not exist!"
             });
         })
    } catch (error) {
-    
+        res.status(400).json({
+            error: "Invalid request"
+        });
    }
 }
 
